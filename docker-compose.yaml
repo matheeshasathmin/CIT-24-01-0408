@@ -1,0 +1,46 @@
+services:
+
+  flask:
+    build: ./app
+    container_name: cybernote_flask
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=cybernotesdb
+      - DB_USER=cyberuser
+      - DB_PASSWORD=cyberpass
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - cybernet
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: cybernote_postgres
+    environment:
+      - POSTGRES_DB=cybernotesdb
+      - POSTGRES_USER=cyberuser
+      - POSTGRES_PASSWORD=cyberpass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - cybernet
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: cybernote_redis
+    networks:
+      - cybernet
+    restart: unless-stopped
+
+networks:
+  cybernet:
+    driver: bridge
+
+volumes:
+  pgdata:
