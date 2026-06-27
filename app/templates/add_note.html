@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Note - CyberNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0b0b0b; color: #fff; min-height: 100vh; }
+        .navbar { background: #0b0b0b; border-bottom: 1px solid #1a1a1a; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; color: #fff; }
+        .logo span { color: #cc0000; }
+        .container { max-width: 600px; margin: 40px auto; padding: 0 28px; }
+        .page-label { font-size: 0.72rem; font-weight: 700; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .page-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 28px; }
+        .form-card { background: #141414; border: 1px solid #1e1e1e; border-radius: 14px; padding: 28px; position: relative; overflow: hidden; }
+        .form-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 3px; height: 60px; background: #cc0000; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.72rem; font-weight: 700; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        input, textarea, select { width: 100%; background: #0b0b0b; border: 1px solid #222; border-radius: 8px; padding: 12px 16px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.88rem; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #cc0000; }
+        textarea { resize: vertical; min-height: 140px; }
+        select option { background: #141414; }
+        .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+        .save-btn { background: #cc0000; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; }
+        .save-btn:hover { background: #ee0000; }
+        .back-btn { background: transparent; border: 1px solid #222; color: #555; border-radius: 8px; padding: 12px 28px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+        .back-btn:hover { border-color: #444; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">CYBER<span>NOTE</span></div>
+    </div>
+    <div class="container">
+        <div class="page-label">New Entry</div>
+        <div class="page-title">Add Note</div>
+        <div class="form-card">
+            <form method="POST">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" placeholder="Enter note title..." required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option>Technology Challenge Competition</option>
+                        <option>Cyber Security Domains and Tools</option>
+                        <option>Cyber Law, Regulations and Policies</option>
+                        <option>Virtualization and Containers</option>
+                        <option>Cloud Security and Privacy</option>
+                        <option>Network Security</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea name="content" placeholder="Write your note here..." required></textarea>
+                </div>
+                <div class="btn-row">
+                    <button type="submit" class="save-btn">Save Note</button>
+                    <a href="/" class="back-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

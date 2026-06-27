@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0b0b0b; color: #fff; min-height: 100vh; }
+        .navbar { background: #0b0b0b; border-bottom: 1px solid #1a1a1a; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; color: #fff; }
+        .logo span { color: #cc0000; }
+        .nav-stats { display: flex; gap: 20px; font-size: 0.72rem; color: #555; font-weight: 500; letter-spacing: 1px; }
+        .nav-stat span { color: #cc0000; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: #cc0000; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        .container { padding: 24px 28px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .page-label { font-size: 0.72rem; font-weight: 700; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .page-title { font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+        .add-btn { background: #cc0000; color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+        .add-btn:hover { background: #ee0000; }
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: #141414; border-radius: 12px; padding: 16px 20px; border: 1px solid #1e1e1e; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #cc0000; border-radius: 0 2px 0 0; }
+        .stat-label { font-size: 0.7rem; font-weight: 700; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .stat-num { font-size: 1.8rem; font-weight: 900; color: #fff; }
+        .search-bar { display: flex; gap: 10px; margin-bottom: 18px; }
+        .search-input { flex: 1; background: #141414; border: 1px solid #1e1e1e; border-radius: 8px; padding: 10px 16px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+        .search-input::placeholder { color: #444; }
+        .search-input:focus { outline: none; border-color: #cc0000; }
+        .category-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+        .cat-badge { padding: 5px 16px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; border: 1px solid #222; background: transparent; color: #555; font-family: 'Inter', sans-serif; text-decoration: none; }
+        .cat-badge.active, .cat-badge:hover { background: #cc0000; color: #fff; border-color: #cc0000; }
+        .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .note-card { background: #141414; border: 1px solid #1e1e1e; border-radius: 14px; padding: 20px; position: relative; overflow: hidden; }
+        .note-card:hover { border-color: #333; }
+        .note-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 3px; height: 50px; background: #cc0000; border-radius: 0 2px 2px 0; }
+        .note-num { font-size: 0.68rem; font-weight: 700; color: #333; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .note-title { font-size: 1.1rem; font-weight: 900; color: #fff; margin-bottom: 10px; letter-spacing: -0.3px; }
+        .note-body { font-size: 0.83rem; color: #777; line-height: 1.6; margin-bottom: 16px; }
+        .note-footer { display: flex; justify-content: space-between; align-items: center; }
+        .note-tag { font-size: 0.68rem; font-weight: 700; color: #555; letter-spacing: 1.5px; text-transform: uppercase; background: #1e1e1e; padding: 3px 10px; border-radius: 4px; }
+        .del-btn { background: transparent; border: 1px solid #2a2a2a; color: #444; border-radius: 6px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; font-family: 'Inter', sans-serif; text-transform: uppercase; text-decoration: none; }
+        .del-btn:hover { background: #cc0000; color: #fff; border-color: #cc0000; }
+        .empty { text-align: center; padding: 60px; color: #444; grid-column: span 2; }
+        .empty h2 { color: #fff; font-size: 1.4rem; font-weight: 900; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">CYBER<span>NOTE</span></div>
+        <div class="nav-stats">
+            <div class="nav-stat"><span class="dot"></span> Flask online</div>
+            <div class="nav-stat">Visits: <span>{{ visits }}</span></div>
+            <div class="nav-stat">DB: <span>PostgreSQL</span></div>
+            <div class="nav-stat">Cache: <span>Redis</span></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-bar">
+            <div>
+                <div class="page-label">Dashboard</div>
+                <div class="page-title">My Notes</div>
+            </div>
+            <a href="/add" class="add-btn">+ Add Note</a>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Notes</div>
+                <div class="stat-num">{{ notes|length }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Page Visits</div>
+                <div class="stat-num">{{ visits }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Storage</div>
+                <div class="stat-num" style="font-size:1rem; padding-top:8px;">PG + Redis</div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input class="search-input" type="text" id="searchInput" placeholder="Search notes..." onkeyup="searchNotes()"/>
+        </div>
+
+        <div class="category-bar">
+            <a href="/" class="cat-badge active">All</a>
+            <a href="/?cat=Technology Challenge Competition" class="cat-badge">TCC</a>
+            <a href="/?cat=Cyber Security Domains and Tools" class="cat-badge">CSDT</a>
+            <a href="/?cat=Cyber Law, Regulations and Policies" class="cat-badge">Cyber Law</a>
+            <a href="/?cat=Virtualization and Containers" class="cat-badge">V & C</a>
+            <a href="/?cat=Cloud Security and Privacy" class="cat-badge">Cloud</a>
+            <a href="/?cat=Network Security" class="cat-badge">Network</a>
+        </div>
+
+        <div class="notes-grid" id="notesGrid">
+            {% for note in notes %}
+            <div class="note-card" data-title="{{ note[1]|lower }}" data-content="{{ note[2]|lower }}">
+                <div class="note-num">Note {{ '%02d' % loop.index }}</div>
+                <div class="note-title">{{ note[1] }}</div>
+                <div class="note-body">{{ note[2] }}</div>
+                <div class="note-footer">
+                    <span class="note-tag">{{ note[3] }}</span>
+                    <a href="/delete/{{ note[0] }}" class="del-btn">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not notes %}
+            <div class="empty">
+                <h2>No Notes Yet</h2>
+                <p>Add your first cybersecurity note using the button above.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function searchNotes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.note-card');
+            cards.forEach(card => {
+                const title = card.dataset.title || '';
+                const content = card.dataset.content || '';
+                card.style.display = (title.includes(query) || content.includes(query)) ? 'block' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
