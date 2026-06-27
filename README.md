@@ -5,9 +5,9 @@
 ---
 
 ## Application Description
-CyberNote is a cybersecurity-themed note-taking web application.
-Users can add, view, search and delete notes with categories like
-Network Security, Cryptography, Malware and Tools.
+CyberNote is a cybersecurity-themed note-taking web application
+built with Flask, PostgreSQL and Redis. Users can add, view,
+search and delete notes organized by cybersecurity module categories.
 
 ---
 
@@ -28,8 +28,8 @@ Network Security, Cryptography, Malware and Tools.
 ---
 
 ## Network and Volume Details
-- **Network:** `cybernet` (bridge) — connects all 3 containers
-- **Volume:** `pgdata` — stores PostgreSQL data permanently
+- **Network:** `cybernet` (bridge) — connects all 3 containers so they can communicate
+- **Volume:** `pgdata` — stores PostgreSQL data permanently even after containers stop
 
 ---
 
@@ -38,6 +38,7 @@ Network Security, Cryptography, Malware and Tools.
 - PostgreSQL stores notes in a persistent named volume
 - Redis tracks page visit count in memory
 - All containers restart automatically on failure
+- Flask depends on PostgreSQL and Redis (starts after them)
 
 ---
 
@@ -88,8 +89,17 @@ The app is available at http://localhost:5000
 Stopping app...
 App stopped. Your data is safe.
 
-# Remove all resources
+# Delete all application resources
 ./remove-app.sh
 Removing app...
 Removed app.
 ```
+
+---
+
+## Application Features
+- Add notes with title, content and module category
+- Search notes in real time
+- Delete notes
+- Page visit counter powered by Redis
+- Notes stored permanently in PostgreSQL
