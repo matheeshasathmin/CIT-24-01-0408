@@ -2,16 +2,24 @@ from flask import Flask, render_template, request, redirect, url_for
 import psycopg2
 import redis
 import os
+import time
 
 app = Flask(__name__)
 
 def get_db():
-    return psycopg2.connect(
-        host=os.environ.get("DB_HOST", "postgres"),
-        database=os.environ.get("DB_NAME", "cybernotesdb"),
-        user=os.environ.get("DB_USER", "cyberuser"),
-        password=os.environ.get("DB_PASSWORD", "cyberpass")
-    )
+    retries = 5
+    while retries > 0:
+        try:
+            return psycopg2.connect(
+                host=os.environ.get("DB_HOST", "postgres"),
+                database=os.environ.get("DB_NAME", "cybernotesdb"),
+                user=os.environ.get("DB_USER", "cyberuser"),
+                password=os.environ.get("DB_PASSWORD", "cyberpass")
+            )
+        except Exception:
+            retries -= 1
+            time.sleep(2)
+    raise Exception("Could not connect to database")
 
 def get_redis():
     return redis.Redis(
@@ -37,14 +45,20 @@ def init_db():
 
 @app.route("/")
 def index():
-    r = get_redis()
-    visits = r.incr("visit_count")
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT id, title, content, category, created_at FROM notes ORDER BY created_at DESC")
-    notes = cur.fetchall()
-    cur.close()
-    conn.close()
+    try:
+        r = get_redis()
+        visits = r.incr("visit_count")
+    except:
+        visits = 0
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT id, title, content, category, created_at FROM notes ORDER BY created_at DESC")
+        notes = cur.fetchall()
+        cur.close()
+        conn.close()
+    except:
+        notes = []
     return render_template("index.html", notes=notes, visits=visits)
 
 @app.route("/add", methods=["GET", "POST"])
